@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,7 @@ namespace DataAccess.DAO
         public void ExecuteProcedure(SqlOperation operation)
         {
             // Conectarse a la base de datos y ejecutar el stored procedure.
+
         }
 
         //Metodo para la ejecución de stored procedures con retorno de datos.
