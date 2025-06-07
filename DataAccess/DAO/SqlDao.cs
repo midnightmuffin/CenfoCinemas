@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace DataAccess.DAO
 {
@@ -25,7 +26,7 @@ namespace DataAccess.DAO
 
         private SqlDao()
         {
-            _connectionString = string.Empty; 
+            _connectionString = @"Data Source=srv-sqldatabase-fzuniga.database.windows.net;Initial Catalog=cenfocinemas-db;User ID=sysman;Password=Cenfotec123!;Trust Server Certificate=True"; 
         }
 
         //Paso 3: Definir el metodo que expondrá la instancia de la clase SqlDao.
@@ -43,10 +44,25 @@ namespace DataAccess.DAO
 
         //Metodo para la ejecución de stored procedures sin retorno de datos.
 
-        public void ExecuteProcedure(SqlOperation operation)
-        {
-            // Conectarse a la base de datos y ejecutar el stored procedure.
-
+        public void ExecuteProcedure(SqlOperation sqlOperation) {
+            // Conectarse a la base de datos y ejecutar el stored procedure sin retorno de datos.
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand(sqlOperation.ProcedureName, conn)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                })
+                {
+                    //Set de los parametros
+                    foreach (var param in sqlOperation.Parameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
+                    //Ejectura el SP
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         //Metodo para la ejecución de stored procedures con retorno de datos.
