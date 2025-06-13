@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
+using static Azure.Core.HttpHeader;
 
 public class Program
 {
@@ -15,13 +16,15 @@ public class Program
             Console.WriteLine("===== MENÚ PRINCIPAL =====");
             Console.WriteLine("1. Crear Usuario");
             Console.WriteLine("2. Consultar Usuarios");
-            Console.WriteLine("3. Actualizar Usuario");
-            Console.WriteLine("4. Eliminar Usuario");
-            Console.WriteLine("5. Registrar Película");
-            Console.WriteLine("6. Consultar Películas");
-            Console.WriteLine("7. Actualizar Película");
-            Console.WriteLine("8. Eliminar Película");
-            Console.WriteLine("9. Salir");
+            Console.WriteLine("3. Consultar Usuario por Id");
+            Console.WriteLine("4. Actualizar Usuario");
+            Console.WriteLine("5. Eliminar Usuario");
+            Console.WriteLine("6. Registrar Película");
+            Console.WriteLine("7. Consultar Películas");
+            Console.WriteLine("8. Consultar Película por Id");
+            Console.WriteLine("9. Actualizar Película");
+            Console.WriteLine("10. Eliminar Película");
+            Console.WriteLine("11. Salir");
             Console.Write("Seleccione una opción: ");
 
             var opcion = Console.ReadLine();
@@ -35,24 +38,30 @@ public class Program
                     ConsultarUsuarios();
                     break;
                 case "3":
-                    ActualizarUsuario();
+                    ConsultarUsuarioPorId();
                     break;
                 case "4":
-                    EliminarUsuario();
+                    ActualizarUsuario();
                     break;
                 case "5":
-                    RegistrarPelicula();
+                    EliminarUsuario();
                     break;
                 case "6":
-                    ConsultarPeliculas();
+                    RegistrarPelicula();
                     break;
                 case "7":
-                    ActualizarPelicula();
+                    ConsultarPeliculas();
                     break;
                 case "8":
-                    EliminarPelicula();
+                    ConsultarPeliculaPorId();
                     break;
                 case "9":
+                    ActualizarPelicula();
+                    break;
+                case "10":
+                    EliminarPelicula();
+                    break;
+                case "11":
                     Console.WriteLine("¡Gracias por usar el menú!");
                     return;
                 default:
@@ -128,6 +137,36 @@ public class Program
 
     }
 
+    public static void ConsultarUsuarioPorId()
+    {
+        Console.WriteLine("Consultando usuario por Id...");
+
+        try
+        {
+            Console.Write("Ingrese el ID del usuario: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("ID inválido.");
+                return;
+            }
+
+            var uCrud = new UserCrudFactory();
+            var u = uCrud.RetrieveById<User>(id);
+
+            if (u == null)
+            {
+                Console.WriteLine("Usuario no encontrado.");
+                return;
+            }
+
+            Console.WriteLine("Usuario encontrado:\n" + JsonConvert.SerializeObject(u));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al consultar usuario: {ex.Message}");
+        }
+    }
+
     public static void ActualizarUsuario()
     {
         Console.WriteLine("Actualizando usuario...");
@@ -165,19 +204,19 @@ public class Program
             Console.Write("Director: ");
             string director = Console.ReadLine();
 
-            var sqlOperation = new SqlOperation
+            //Creamos el objeto de la pelicula a partir de los datos ingresados
+
+            var movie = new Movie()
             {
-                ProcedureName = "CRE_MOVIE_PR"
+                Title = title,
+                Description = description,
+                ReleaseDate = releaseDate,
+                Genre = genre,
+                Director = director
             };
 
-            sqlOperation.AddStringParameter("P_Title", title);
-            sqlOperation.AddStringParameter("P_Description", description);
-            sqlOperation.AddDateTimeParam("P_ReleaseDate", releaseDate);
-            sqlOperation.AddStringParameter("P_Genre", genre);
-            sqlOperation.AddStringParameter("P_Director", director);
-
-            var sqlDao = SqlDao.GetInstance();
-            sqlDao.ExecuteProcedure(sqlOperation);
+            var uCrud = new MovieCrudFactory();
+            uCrud.Create(movie);
 
             Console.WriteLine("Película registrada exitosamente.");
         }
@@ -189,8 +228,44 @@ public class Program
 
     public static void ConsultarPeliculas()
     {
-        Console.WriteLine("Consultando películas...");
-        // Lógica SELECT de películas
+        Console.WriteLine("Consultando peliculas...");
+
+        var uCrud = new MovieCrudFactory();
+        var listMovies = uCrud.RetrieveAll<Movie>();
+        foreach (var m in listMovies)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(m));
+        }
+    }
+
+    public static void ConsultarPeliculaPorId()
+    {
+        Console.WriteLine("Consultando película por Id...");
+
+        try
+        {
+            Console.Write("Ingrese el ID de la película: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("ID inválido.");
+                return;
+            }
+
+            var uCrud = new MovieCrudFactory();
+            var m = uCrud.RetrieveById<Movie>(id);
+
+            if (m == null)
+            {
+                Console.WriteLine("Película no encontrada.");
+                return;
+            }
+
+            Console.WriteLine("Película encontrada:\n" + JsonConvert.SerializeObject(m));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al consultar película: {ex.Message}");
+        }
     }
 
     public static void ActualizarPelicula()
