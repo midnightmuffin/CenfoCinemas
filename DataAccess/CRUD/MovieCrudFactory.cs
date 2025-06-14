@@ -70,7 +70,26 @@ namespace DataAccess.CRUD
 
             if (lstResults.Count > 0)
             {
-                var movie = BuildMovie(lstResults[0]);
+                var row = lstResults[0];
+                var movie = BuildMovie(row);
+                return (T)Convert.ChangeType(movie, typeof(T));
+            }
+
+            return default(T);
+        }
+
+        public T RetrieveByTitle<T>(Movie movie)
+        {
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_MOVIE_BY_TITLE_PR" };
+
+            sqlOperation.AddStringParameter("P_Title", movie.Title);
+
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResults.Count > 0)
+            {
+                var row = lstResults[0];
+                movie = BuildMovie(row);
                 return (T)Convert.ChangeType(movie, typeof(T));
             }
 
