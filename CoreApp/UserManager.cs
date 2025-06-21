@@ -63,6 +63,39 @@ namespace CoreApp
             }
         }
 
+        public List<User> RetrieveAll()
+        {
+            var uCrud = new UserCrudFactory();
+            return uCrud.RetrieveAll<User>();
+        }
+
+        public User RetrieveById(int id)
+        {
+            var uCrud = new UserCrudFactory();
+            return uCrud.RetrieveById<User>(id);
+        }
+
+        public User RetrieveByUserCode(string userCode)
+        {
+            var uCrud = new UserCrudFactory();
+            var udto = new User { UserCode = userCode };
+            return uCrud.RetrieveByUserCode<User>(udto);
+        }
+
+        public User RetrieveByEmail(string email)
+        {
+            var uCrud = new UserCrudFactory();
+            var udto = new User { Email = email };
+            return uCrud.RetrieveByEmail<User>(udto);
+        }
+
+        public User Update(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            uCrud.Update(user);
+            return RetrieveById(user.Id);
+        }
+
         private bool IsOver18(User user)
         {
             var currentDate = DateTime.Now;

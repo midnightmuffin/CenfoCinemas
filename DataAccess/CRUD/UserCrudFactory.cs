@@ -32,16 +32,6 @@ namespace DataAccess.CRUD
 
         }
 
-        public override void Delete(BaseDTO baseDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override T Retrieve<T>()
-        {
-            throw new NotImplementedException();
-        }
-
         public override List<T> RetrieveAll<T>()
         {
             var lstUsers = new List<T>();
@@ -113,6 +103,30 @@ namespace DataAccess.CRUD
 
 
         public override void Update(BaseDTO baseDTO)
+        {
+            var user = baseDTO as User;
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "UPD_USER_PR"
+            };
+
+            sqlOperation.AddIntParam("P_UserId", user.Id);
+            sqlOperation.AddStringParameter("P_UserCode", user.UserCode);
+            sqlOperation.AddStringParameter("P_Name", user.Name);
+            sqlOperation.AddStringParameter("P_Email", user.Email);
+            sqlOperation.AddStringParameter("P_Password", user.Password);
+            sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
+            sqlOperation.AddStringParameter("P_Status", user.Status);
+
+            _sqlDao.ExecuteProcedure(sqlOperation);
+        }
+
+        public override void Delete(BaseDTO baseDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override T Retrieve<T>()
         {
             throw new NotImplementedException();
         }
