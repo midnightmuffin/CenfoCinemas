@@ -11,7 +11,7 @@ namespace CoreApp
 {
     public class EmailManager : BaseManager
     {
-        
+        private readonly string apiKey = "API_Key";
         private readonly string fromEmail = "fabiolazu2000@gmail.com";
         private readonly string fromName = "CenfoCinemas";
 
