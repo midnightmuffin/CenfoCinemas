@@ -79,6 +79,7 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
         [HttpGet]
         [Route("RetrieveByEmail")]
         public ActionResult RetrieveByEmail(string email)
