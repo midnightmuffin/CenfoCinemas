@@ -39,8 +39,8 @@ namespace CoreApp
                         {
                             uCrud.Create(user);
                             //Enviar correo electrónico de bienvenida al usuario                            
-                            var emailManager = new EmailManager();
-                            emailManager.SendWelcomeEmail(user.Email, user.Name).GetAwaiter().GetResult();
+                            //var emailManager = new EmailManager();
+                            //emailManager.SendWelcomeEmail(user.Email, user.Name).GetAwaiter().GetResult();
                         }
                         else
                         {
@@ -94,6 +94,12 @@ namespace CoreApp
             var uCrud = new UserCrudFactory();
             uCrud.Update(user);
             return RetrieveById(user.Id);
+        }
+
+        public void Delete(int id)
+        {
+            var uCrud = new UserCrudFactory();
+            uCrud.Delete(new User { Id = id });
         }
 
         private bool IsOver18(User user)

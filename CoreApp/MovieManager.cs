@@ -26,11 +26,11 @@ namespace CoreApp
                 {
                     mCrud.Create(movie);
 
-                    var uCrud = new UserCrudFactory();
+                    // Aqui se llama a todos los usuarios para enviar el email de nueva pelicula:
+                    /*var uCrud = new UserCrudFactory();
                     var users = uCrud.RetrieveAll<User>();
-
                     var emailManager = new EmailManager();
-                    emailManager.SendNewMovie(movie.Title, users).GetAwaiter().GetResult();
+                    emailManager.SendNewMovie(movie.Title, users).GetAwaiter().GetResult();*/
                 }
                 else
                 {
