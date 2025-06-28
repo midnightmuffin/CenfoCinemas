@@ -110,22 +110,13 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("Update")]
-        public ActionResult Update(int id, User user)
+        public ActionResult Update(User user)
         {
             try
             {
-                if (user.Id != 0 && user.Id != id)
-                    return BadRequest("El Id de la ruta y del cuerpo no coinciden.");
-
-                user.Id = id;
-
                 var um = new UserManager();
                 var updated = um.Update(user);
                 return Ok(updated);
-            }
-            catch (KeyNotFoundException knf)
-            {
-                return NotFound(knf.Message);
             }
             catch (Exception ex)
             {
@@ -135,22 +126,15 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("Delete")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(User user)
         {
             try
             {
                 var um = new UserManager();
-                var result = um.RetrieveById(id);
-                if (result == null)
-                {
-                    return NotFound($"Usuario con ID {id} no encontrado.");
-                }
-                else
-                {
-                    um.Delete(id);
-                    return Ok(new { Message = $"Usuario con ID {id} eliminado con éxito." });
-                }
-                   
+                var result = um.RetrieveById(user.Id);
+                um.Delete(user.Id);
+                return Ok(new { Message = $"Usuario con ID {user.Id} eliminado con éxito." });
+
             }
             catch (Exception ex)
             {

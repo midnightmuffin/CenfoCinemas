@@ -13,6 +13,27 @@ function UsersViewController() {
         console.log("User init view --> Ok");
         // Llamar al método para llenar la tabla de usuarios
         this.LoadTable();
+
+        // Asignar el evento click al botón de crear usuario
+        $('#btnCreate').click(function () {
+            // Llamar al método para crear un usuario
+            var vc = new UsersViewController();
+            vc.Create();
+        });
+
+        // Asignar el evento click al botón de editar usuario
+        $('#btnUpdate').click(function () {
+            // Llamar al método para actualizar un usuario
+            var vc = new UsersViewController();
+            vc.Update();
+        });
+
+        // Asignar el evento click al botón de eliminar usuario
+        $('#btnDelete').click(function () {
+            // Llamar al método para eliminar un usuario
+            var vc = new UsersViewController();
+            vc.Delete();
+        });
     };
 
     // Método para llenar la tabla de usuarios
@@ -66,7 +87,108 @@ function UsersViewController() {
             },
             columns: columns
         });
+
+        // Asignar eventos de carga de datos o binding según el click en la tabla
+
+        $('#tblUsers tbody').on('click', 'tr', function () {
+            //Extraemos la fila seleccionada
+            var row = $(this).closest('tr');
+            // Extraemos el DTO, esto nos devuelve el JSON del usuario seleccionado por el usuario
+            // Segun la data devuela por el API
+            var userDTO = $('#tblUsers').DataTable().row(row).data();
+            // Binding con el form
+            $('#txtId').val(userDTO.id);
+            $('#txtUserCode').val(userDTO.userCode);
+            $('#txtName').val(userDTO.name);
+            $('#txtEmail').val(userDTO.email);
+            $('#txtStatus').val(userDTO.status);
+
+            // La fecha tiene un formato
+            var onlyDate = userDTO.birthDate.split('T');
+            $('#txtBDate').val(onlyDate[0]);
+        })
     }
+    // Método para crear un nuevo usuario
+
+    this.Create = function () {
+        var userDTO = {};
+        // Atributos con valores default que son controlados por el API
+        userDTO.id = 0; // El API lo maneja como autoincremental
+        userDTO.created = "2025-01-01";
+        userDTO.updated = "2025-01-01";
+
+        // Atributo que son capturados en pantalla
+        userDTO.userCode = $('#txtUserCode').val();
+        userDTO.name = $('#txtName').val();
+        userDTO.email = $('#txtEmail').val();
+        userDTO.status = $('#txtStatus').val();
+        userDTO.birthDate = $('#txtBDate').val();
+        userDTO.password = $('#txtPass').val();
+
+        // Enviar la data al API para crear el usuario
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Create";
+
+        ca.PostToAPI(urlService, userDTO, function () {
+            // Recargar la tabla de usuarios
+            $('#tblUsers').DataTable().ajax.reload();
+        });
+
+    }
+
+    // Método para editar un usuario existente (por implementar)
+    this.Update = function () {
+
+        var userDTO = {};
+        // Atributos con valores default que son controlados por el API
+        userDTO.id = $('#txtId').val();
+        userDTO.created = "2025-01-01";
+        userDTO.updated = "2025-01-01";
+
+        // Atributo que son capturados en pantalla
+        userDTO.userCode = $('#txtUserCode').val();
+        userDTO.name = $('#txtName').val();
+        userDTO.email = $('#txtEmail').val();
+        userDTO.status = $('#txtStatus').val();
+        userDTO.birthDate = $('#txtBDate').val();
+        userDTO.password = $('#txtPass').val();
+
+        // Enviar la data al API para crear el usuario
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Update";
+
+        ca.PutToAPI(urlService, userDTO, function () {
+            // Recargar la tabla de usuarios
+            $('#tblUsers').DataTable().ajax.reload();
+        });
+    };
+
+    this.Delete = function () {
+
+        var userDTO = {};
+        // Atributos con valores default que son controlados por el API
+        userDTO.id = $('#txtId').val(); // El API lo maneja como autoincremental
+        userDTO.created = "2025-01-01";
+        userDTO.updated = "2025-01-01";
+
+        // Atributo que son capturados en pantalla
+        userDTO.userCode = $('#txtUserCode').val();
+        userDTO.name = $('#txtName').val();
+        userDTO.email = $('#txtEmail').val();
+        userDTO.status = $('#txtStatus').val();
+        userDTO.birthDate = $('#txtBDate').val();
+        userDTO.password = $('#txtPass').val();
+
+        // Enviar la data al API para crear el usuario
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Delete";
+
+        ca.DeleteToAPI(urlService, userDTO, function () {
+            // Recargar la tabla de usuarios
+            $('#tblUsers').DataTable().ajax.reload();
+        });
+    };
+
 }
 
 $(document).ready(function () {
@@ -75,4 +197,4 @@ $(document).ready(function () {
     var vc = new UsersViewController();
     vc.initView();
 
-})
+});

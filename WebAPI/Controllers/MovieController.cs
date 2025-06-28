@@ -84,46 +84,31 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("Update")]
-        public ActionResult Update(int id, Movie movie)
+        public ActionResult Update(Movie movie)
         {
             try
             {
-                if (movie.Id != 0 && movie.Id != id)
-                    return BadRequest("El Id de la ruta y del cuerpo no coinciden.");
-
-                movie.Id = id;
-
                 var mm = new MovieManager();
                 var updated = mm.Update(movie);
                 return Ok(updated);
-            }
-            catch (KeyNotFoundException knf)
-            {
-                return NotFound(knf.Message);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
+
         }
 
         [HttpDelete]
         [Route("Delete")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Movie movie)
         {
             try
             {
                 var mm = new MovieManager();
-                var result = mm.RetrieveById(id);
-                if (result == null)
-                {
-                    return NotFound($"Película con ID {id} no encontrada.");
-                }
-                else
-                {
-                    mm.Delete(id);
-                    return Ok(new { Message = $"Película con ID {id} eliminada con éxito." });
-                }
+                var result = mm.RetrieveById(movie.Id);
+                mm.Delete(movie.Id);
+                return Ok(new { Message = $"Película con ID {movie.Id} eliminada con éxito." });
 
             }
             catch (Exception ex)
