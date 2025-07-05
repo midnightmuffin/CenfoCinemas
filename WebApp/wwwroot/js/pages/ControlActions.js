@@ -1,14 +1,12 @@
 ﻿function ControlActions() {
 	//Ruta base del API
+	//this.URL_API = "https://localhost:7216/api/";
 
-	// Usa la variable que el layout inyectó; si por alguna razón no existe,
-	// recurre al localhost (útil en pruebas unitarias, etc.)
-	this.URL_API = window.ApiBaseUrl || "https://localhost:7216/api/";
+	this.URL_API = "https://cenfocinemas-fzunigav-duchbgakeeemczcz.eastus2-01.azurewebsites.net/api/";
 
 	this.GetUrlApiService = function (service) {
-		// Garantiza la barra final o inicial según tu convención
-		return `${this.URL_API.replace(/\/$/, "")}/${service.replace(/^\//, "")}`;
-	};
+		return this.URL_API + service;
+	}
 
 	this.GetTableColumsDataName = function (tableId) {
 		var val = $('#' + tableId).attr("ColumnsDataName");
