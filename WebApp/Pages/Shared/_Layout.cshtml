@@ -17,6 +17,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        // Si estamos en Azure, usa la URL publicada; de lo contrario deja localhost.
+        window.ApiBaseUrl = window.location.hostname.includes("azurewebsites.net")
+            ? "https://cenfocinemas-fzunigav-duchbgakeeemczcz.eastus2-01.azurewebsites.net/api/"
+            : "https://localhost:7216/api/";
+    </script>
+
     <script src="~/js/pages/controlactions.js"></script>
 </head>
 <body>

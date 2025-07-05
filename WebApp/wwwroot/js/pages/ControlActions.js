@@ -1,10 +1,14 @@
 ﻿function ControlActions() {
 	//Ruta base del API
-	this.URL_API = "https://localhost:7216/api/";
+
+	// Usa la variable que el layout inyectó; si por alguna razón no existe,
+	// recurre al localhost (útil en pruebas unitarias, etc.)
+	this.URL_API = window.ApiBaseUrl || "https://localhost:7216/api/";
 
 	this.GetUrlApiService = function (service) {
-		return this.URL_API + service;
-	}
+		// Garantiza la barra final o inicial según tu convención
+		return `${this.URL_API.replace(/\/$/, "")}/${service.replace(/^\//, "")}`;
+	};
 
 	this.GetTableColumsDataName = function (tableId) {
 		var val = $('#' + tableId).attr("ColumnsDataName");
