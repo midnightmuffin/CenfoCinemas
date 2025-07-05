@@ -1,8 +1,8 @@
 ﻿function ControlActions() {
 	//Ruta base del API
-	//this.URL_API = "https://localhost:7216/api/";
+	this.URL_API = "https://localhost:7216/api/";
 
-	this.URL_API = "https://cenfocinemas-fzunigav-duchbgakeeemczcz.eastus2-01.azurewebsites.net/api/";
+	//this.URL_API = "https://cenfocinemas-fzunigav-duchbgakeeemczcz.eastus2-01.azurewebsites.net/api/";
 
 	this.GetUrlApiService = function (service) {
 		return this.URL_API + service;

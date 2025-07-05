@@ -34,6 +34,37 @@ function UsersViewController() {
             var vc = new UsersViewController();
             vc.Delete();
         });
+
+        // Buscar por ID y llenar el formulario
+        $('#btnSearchId').click(function () {
+
+            var id = $('#txtSearchId').val();
+            if (!id) { return; }
+
+            // Obtenemos la data actual de la tabla
+            var data = $('#tblUsers').DataTable().rows().data().toArray();
+
+            var userDTO = null;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].id == id) {
+                    userDTO = data[i];
+                    break;
+                }
+            }
+
+            if (userDTO) {
+                var vc = new UsersViewController();
+                vc.fillForm(userDTO);
+
+            } else {
+                alert('Usuario no encontrado');
+            }
+        });
+
+        $('#txtSearchId').keyup(function (e) {
+            if (e.key === 'Enter') $('#btnSearchId').click();
+        });
+
     };
 
     // Método para llenar la tabla de usuarios
@@ -108,6 +139,16 @@ function UsersViewController() {
             $('#txtBDate').val(onlyDate[0]);
         })
     }
+
+    this.fillForm = function (u) {
+        $('#txtId').val(u.id);
+        $('#txtUserCode').val(u.userCode);
+        $('#txtName').val(u.name);
+        $('#txtEmail').val(u.email);
+        $('#txtStatus').val(u.status);
+        $('#txtBDate').val(u.birthDate.split('T')[0]);
+    };
+
     // Método para crear un nuevo usuario
 
     this.Create = function () {

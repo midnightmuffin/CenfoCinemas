@@ -34,6 +34,36 @@ function MoviesViewController() {
             var vc = new MoviesViewController();
             vc.Delete();
         });
+
+        // Buscar por ID y llenar el formulario
+        $('#btnSearchMovieId').click(function () {
+
+            var id = $('#txtSearchMovieId').val();
+            if (!id) { return; }
+
+            // Obtenemos la data actual de la tabla
+            var data = $('#tblMovies').DataTable().rows().data().toArray();
+
+            var movieDTO = null;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].id == id) {
+                    movieDTO = data[i];
+                    break;
+                }
+            }
+
+            if (movieDTO) {
+                var vc = new MoviesViewController();
+                vc.fillForm(movieDTO);
+            } else {
+                alert('Película no encontrada');
+            }
+        });
+
+        // Disparar búsqueda con Enter
+        $('#txtSearchMovieId').keyup(function (e) {
+            if (e.key === 'Enter') $('#btnSearchMovieId').click();
+        });
     };
 
     // Método para llenar la tabla de peliculas
@@ -105,7 +135,16 @@ function MoviesViewController() {
             var onlyDate = movieDTO.releaseDate.split('T');
             $('#txtRDate').val(onlyDate[0]);
         })
-    }
+    };
+
+    this.fillForm = function (m) {
+        $('#txtId').val(m.id);
+        $('#txtTitle').val(m.title);
+        $('#txtDescription').val(m.description);
+        $('#txtGenre').val(m.genre);
+        $('#txtDirector').val(m.director);
+        $('#txtRDate').val(m.releaseDate.split('T')[0]);
+    };
 
     // Método para crear una nueva pelicula
 
